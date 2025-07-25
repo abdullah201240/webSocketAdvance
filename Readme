@@ -1,0 +1,177 @@
+# WebSocketAdvance
+
+A full-stack real-time sales management application featuring a Next.js (React) frontend and a Node.js (Express) backend with WebSocket (Socket.IO), MySQL, Redis caching, and RabbitMQ for event-driven architecture.
+
+---
+
+## Features
+
+### Frontend (Next.js)
+- **Sales Dashboard**: View, add, edit, and delete sales transactions in real time.
+- **Live Updates**: Sales data updates instantly via WebSocket (Socket.IO) without page refresh.
+- **Rich UI**: Built with reusable UI components (Radix UI, Tailwind CSS).
+- **Filtering & Search**: Filter sales by status, payment method, and search by invoice, customer, or product.
+- **Sales Details**: View detailed information for each sale.
+- **Form Validation**: Robust sales form with auto-calculation of totals, discounts, and tax.
+- **Statistics**: Real-time summary of total sales, transactions, and payment statuses.
+
+### Backend (Node.js/Express)
+- **RESTful API**: CRUD endpoints for sales (`/api/sales`).
+- **WebSocket Events**: Real-time notifications for new, updated, and deleted sales.
+- **MySQL Database**: Persistent storage using Sequelize ORM.
+- **Redis Caching**: Fast retrieval and cache invalidation for sales lists.
+- **RabbitMQ**: Event queue for cache invalidation and scalable event processing.
+- **Validation**: Input validation using Zod.
+- **Error Handling**: Centralized error middleware.
+
+---
+
+## Tech Stack
+
+- **Frontend**: Next.js, React, Tailwind CSS, Radix UI, Socket.IO Client, TypeScript
+- **Backend**: Node.js, Express, Socket.IO, Sequelize (MySQL), Redis, RabbitMQ, TypeScript
+- **Dev Tools**: ESLint, Prettier, Nodemon, TypeScript
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v18+ recommended)
+- MySQL
+- Redis
+- RabbitMQ
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/abdullah201240/webSocketAdvance.git
+cd webSocketAdvance
+```
+
+### 2. Install dependencies
+
+#### Client
+
+```bash
+cd client
+npm install
+```
+
+#### Server
+
+```bash
+cd ../server
+npm install
+```
+
+### 3. Configure Environment Variables
+
+- Copy `.env.example` to `.env` in both `client` and `server` directories and fill in your configuration (DB credentials, ports, etc.).
+
+### 4. Database Setup
+
+- Create a MySQL database (default: `websocket`).
+- Run migrations (if using Sequelize CLI):
+
+```bash
+npx sequelize-cli db:migrate
+```
+
+### 5. Start the Development Servers
+
+#### Start Backend
+
+```bash
+cd server
+npm run dev
+```
+
+#### Start Frontend
+
+```bash
+cd ../client
+npm run dev
+```
+
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- Backend API: [http://localhost:8080](http://localhost:8080)
+
+---
+
+## API Endpoints
+
+| Method | Endpoint         | Description                |
+|--------|------------------|----------------------------|
+| GET    | `/api/sales`     | Get all sales (paginated)  |
+| POST   | `/api/sales`     | Add a new sale             |
+| PUT    | `/api/sales/:id` | Update a sale              |
+| DELETE | `/api/sales/:id` | Delete a sale              |
+
+---
+
+## Real-Time Events
+
+- `new_sale`: Emitted when a new sale is added.
+- `sale_updated`: Emitted when a sale is updated.
+- `sale_deleted`: Emitted when a sale is deleted.
+
+---
+
+## Data Model
+
+```ts
+// SaleAttributes (TypeScript)
+{
+  id: number;
+  productId: string;
+  productName: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+  discount: number;
+  finalPrice: number;
+  customerId: string;
+  customerName: string;
+  paymentMethod: 'cash' | 'card' | 'mobile_payment' | 'credit';
+  paymentStatus: 'pending' | 'partial' | 'paid';
+  saleerId: string;
+  SaleerName: string;
+  saleDate: Date;
+  invoiceNumber: string;
+  taxAmount: number;
+  notes?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+```
+
+---
+
+## Folder Structure
+
+```
+webSocketAdvance/
+  client/   # Next.js frontend
+    src/
+      components/  # UI and feature components
+      data/        # Mock data
+      types/       # TypeScript types
+      utils/       # Utility functions (e.g., socket)
+      app/         # Main app entry and pages
+  server/   # Express backend
+    src/
+      controllers/ # API controllers
+      models/      # Sequelize models
+      routes/      # API routes
+      services/    # Socket.IO, Redis, RabbitMQ
+      middlewares/ # Error handling, validation
+      config/      # DB and app config
+```
+
+---
+
+## License
+
+[MIT](LICENSE)
